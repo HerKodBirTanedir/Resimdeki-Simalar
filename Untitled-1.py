@@ -12,7 +12,7 @@ if face_cascade.empty():
 
 # Algılama yapmak istediğiniz resmin dosya yolunu veya resim dosyanızın adını buraya yazın.
 #Resmimiz aynı klasörde olduğu için sadece isim yamanız yeterli.
-image_path = 'ornek_resim.jpg' 
+image_path = 'aile.jpg' 
 
 # Resmi OpenCV kullanarak yükle
 img = cv2.imread(image_path)
@@ -35,3 +35,28 @@ if img.shape[1] > max_width: # Eğer resmin genişliği belirlenen maksimum geni
 # Yüz algılama performansı için resmi gri tonlamaya çevir
 # Haar Cascade modelleri genellikle gri tonlamalı görüntülerde daha iyi çalışır.
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+# Gri tonlamalı resimde yüzleri algılar
+# detectMultiScale fonksiyonu, algılanan yüzlerin konumlarını döndürür.
+# Parametreler:
+# 1.1: scaleFactor - Görüntü ölçeği küçültme oranı. Küçük değerler daha fazla algılama penceresi, daha hassas ama yavaş algılanır.
+# 4: minNeighbors - Her adayı kaç komşu dikdörtgenin onaylaması gerektiğini belirler. Yüksek değerler daha az ama daha güvenilir algılama.
+faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+
+print(f"Resimde toplam {len(faces)} adet yüz algılandı.")
+
+# Algılanan her yüz için resim üzerinde bir dikdörtgen çiz
+for (x, y, w, h) in faces:
+    # cv2.rectangle(img(resim), (x, y)sol_üst_köşe, (x + w, y + h)sağ_alt_köşe, (255, 0, 0)renk, (2)çizgi_kalınlığı)
+    cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+    
+# İşlenmiş resmi bir pencerede göster
+# 'Resimdeki Yüz Algılama' pencerenin başlığı olacak.
+cv2.imshow('Resimdeki Yuz Algilama', img)
+
+# Kullanıcının bir tuşa basmasını bekle.
+# 0 değeri, herhangi bir tuşa basılana kadar pencerenin açık kalmasını sağlar.
+cv2.waitKey(0)
+
+# Tüm OpenCV pencerelerini kapat
+cv2.destroyAllWindows()
